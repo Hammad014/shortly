@@ -1,5 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Image from "next/image";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,11 +20,38 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+      
+        <body className={`${geistSans.variable} ${geistMono.variable} antialiased relative max-w-full overflow-x-hidden`}>
+        
+        {/* Background Rectangles */}
+        <Image
+          className='fixed z-0 top-0 right-10'
+          src='/images/Rectangle 4 (1).png'
+          height={250}
+          width={350}
+          alt='cube1'
+        />
+        <Image
+          className='fixed top-80 right-60 z-0'
+          src='/images/Rectangle 4.png'
+          height={250}
+          width={350}
+          alt='cube2'
+        />
+        <Image
+          className='fixed z-0 top-28 left-10'
+          src='/images/Rectangle 5 (1).png'
+          height={100}
+          width={350}
+          alt='cube3'
+        />
+
+        {/* Main Content */}
+        <div className="relative z-10">
+          {children}
+        </div>
       </body>
+        
     </html>
   );
 }
