@@ -1,16 +1,23 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import Image from 'next/image';
+import { motion } from 'framer-motion';
 
 export default function Preview({ targetUrl, metadata }) {
   const [seconds, setSeconds] = useState(5);
   const [redirecting, setRedirecting] = useState(false);
 
+  const startRedirect = useCallback(() => {
+    if (!redirecting) {
+      setRedirecting(true);
+      window.location.href = targetUrl;
+    }
+  }, [redirecting, targetUrl]);
+
   useEffect(() => {
     const timer = setInterval(() => {
-      setSeconds((prev) => {
+      setSeconds(prev => {
         if (prev <= 1) {
-          clearInterval(timer);
           startRedirect();
           return 0;
         }
@@ -19,115 +26,127 @@ export default function Preview({ targetUrl, metadata }) {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [startRedirect]);
 
-  const startRedirect = () => {
-    if (!redirecting) {
-      setRedirecting(true);
-      window.location.href = targetUrl;
-    }
-  };
+  const handleCancel = () => window.history.back();
 
   return (
-    <div className="fixed inset-0 bg-black/90 backdrop-blur-lg z-50 flex items-center justify-center p-4">
-      <div className="bg-gradient-to-br from-white to-gray-50 rounded-2xl max-w-xl w-full overflow-hidden shadow-2xl transform transition-all duration-300 hover:shadow-3xl">
-        {/* Preview Image */}
-        {metadata?.image?.url ? (
-          <div className="relative h-56 bg-gradient-to-r from-blue-100 to-purple-100">
-            <Image
-              src={metadata.image.url}
-              alt={metadata.title}
-              fill
-              className="object-cover transition-transform duration-300 hover:scale-105"
-              sizes="(max-width: 768px) 100vw, 50vw"
-              priority
-              unoptimized
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
-          </div>
-        ) : (
-          <div className="relative h-56 bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center">
-            <div className="flex flex-col items-center text-gray-500">
-              <div className="mb-4 p-4 bg-white rounded-full shadow-lg">
-                <Image
-                  src={metadata.favicon}
-                  alt="Favicon"
-                  width={48}
-                  height={48}
-                  className="rounded-lg"
-                  unoptimized
-                />
-              </div>
-              <span className="font-medium text-gray-600">No preview available</span>
+    <div className="fixed inset-0 bg-gradient-to-br from-slate-900/95 to-blue-900/30 backdrop-blur-xl z-50 flex items-center justify-center p-2 sm:p-4">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -20 }}
+        className="bg-gradient-to-br from-white to-gray-50 rounded-xl sm:rounded-2xl shadow-2xl w-full max-w-[95%] sm:max-w-md lg:max-w-lg overflow-hidden border border-white/20"
+        style={{ maxHeight: '90vh' }}
+      >
+        {/* Header */}
+        <div className="px-4 sm:px-6 pt-4 sm:pt-6 pb-2 border-b border-gray-100">
+          <div className="flex items-center gap-2">
+            <div className="p-1.5 sm:p-2 bg-blue-100 rounded-md sm:rounded-lg">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
             </div>
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900">Secure Link Preview</h2>
           </div>
-        )}
+        </div>
 
-        <div className="p-6 space-y-4">
-          <div className="flex items-start gap-4">
-            <div className="shrink-0 p-2 bg-white rounded-lg shadow-md">
-              <Image
-                src={metadata.favicon}
-                alt="Site favicon"
-                width={40}
-                height={40}
-                className="rounded"
-                unoptimized
-              />
-            </div>
-            <div className="space-y-1">
-              <h2 className="text-2xl font-bold text-gray-900 line-clamp-2 leading-tight">
-                {metadata.title}
-              </h2>
-              {metadata.siteName && (
-                <div className="text-sm text-purple-600 font-medium">
-                  {metadata.siteName}
+        {/* Content Container */}
+        <div className="flex flex-col h-[calc(90vh-80px)]">
+          {/* Scrollable Content */}
+          <div className="overflow-y-auto flex-1">
+            {/* Image Section */}
+            <div className="relative aspect-video sm:h-48 group overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-900/30 to-transparent z-10" />
+              {metadata?.image?.url ? (
+                <Image
+                  src={metadata.image.url}
+                  alt={metadata.title}
+                  fill
+                  className="object-cover transform transition-transform duration-300 group-hover:scale-105"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 40vw"
+                />
+              ) : (
+                <div className="h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50">
+                  <motion.div 
+                    initial={{ scale: 0.9 }}
+                    animate={{ scale: 1 }}
+                    className="p-3 sm:p-4 bg-white/90 backdrop-blur-sm rounded-lg sm:rounded-xl shadow-lg"
+                  >
+                    <Image
+                      src={metadata.favicon}
+                      alt="Favicon"
+                      width={40}
+                      height={40}
+                      className="rounded-lg"
+                    />
+                  </motion.div>
                 </div>
               )}
             </div>
+
+            {/* Text Content */}
+            <div className="p-4 sm:p-6 space-y-3 sm:space-y-4">
+              <div className="flex items-start gap-2 sm:gap-3">
+                <div className="shrink-0 p-1 sm:p-1.5 bg-white rounded-md sm:rounded-lg shadow border border-gray-100">
+                  <Image
+                    src={metadata.favicon}
+                    alt="Favicon"
+                    width={28}
+                    height={28}
+                    className="rounded"
+                  />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h1 className="text-base sm:text-lg font-semibold text-gray-900 line-clamp-1">
+                    {metadata.title}
+                  </h1>
+                  <p className="text-xs sm:text-sm text-gray-500 mt-0.5 sm:mt-1 line-clamp-1">
+                    {metadata.siteName || new URL(targetUrl).hostname}
+                  </p>
+                </div>
+              </div>
+
+              <p className="text-xs sm:text-sm text-gray-600 line-clamp-2 sm:line-clamp-3 leading-relaxed">
+                {metadata.description || 'You are being securely redirected to this destination'}
+              </p>
+            </div>
           </div>
 
-          <p className="text-gray-600 mb-4 line-clamp-3 leading-relaxed">
-            {metadata.description}
-          </p>
-
-          <div className="space-y-4">
-            <div className="relative pt-4">
-              <div className="absolute top-0 left-0 right-0 h-1 bg-gray-200 rounded-full">
-                <div 
-                  className="absolute top-0 left-0 h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full transition-all duration-1000"
-                  style={{ width: `${(seconds / 5) * 100}%` }}
+          {/* Fixed Footer */}
+          <div className="p-4 sm:p-6 border-t border-gray-100 bg-gray-50">
+            {/* Progress Bar */}
+            <div className="pb-3 sm:pb-4">
+              <div className="relative h-1 bg-gray-200 rounded-full">
+                <motion.div
+                  className="absolute h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"
+                  initial={{ width: '100%' }}
+                  animate={{ width: '0%' }}
+                  transition={{ duration: 5, ease: 'linear' }}
                 />
               </div>
             </div>
 
-            <div className="flex items-center justify-between gap-4">
+            {/* Action Buttons */}
+            <div className="grid grid-cols-2 gap-2 sm:gap-3">
+              <button
+                onClick={handleCancel}
+                className="px-3 sm:px-4 py-2 text-sm sm:text-base text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg 
+                         font-medium transition-colors shadow-sm"
+              >
+                Cancel
+              </button>
               <button
                 onClick={startRedirect}
-                className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-xl font-semibold 
-                         hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-[1.02]
-                         shadow-lg hover:shadow-xl active:scale-95"
+                className="px-3 sm:px-4 py-2 text-sm sm:text-base bg-gradient-to-r from-blue-600 to-purple-600 text-white 
+                         rounded-lg font-medium shadow-lg hover:shadow-md transition-all"
               >
-                Continue in {seconds}s
+                Continue ({seconds}s)
               </button>
-              
-              <a
-                href={targetUrl}
-                className="px-4 py-2 text-gray-600 hover:text-purple-600 font-medium transition-colors
-                           border border-gray-200 rounded-xl hover:border-purple-200 hover:bg-purple-50"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Open in new tab
-              </a>
             </div>
           </div>
-
-          <div className="mt-4 text-sm text-gray-500 break-all px-4 py-2 bg-gray-50 rounded-lg font-mono">
-            {targetUrl}
-          </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
