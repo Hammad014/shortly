@@ -31,6 +31,7 @@ export default function Home() {
     setShowAll,
     toggleCustomAlias,
     showCustomAlias,
+    handleCustomAliasChange,
   } = useShortenLink();
 
   useEffect(() => {
@@ -297,6 +298,7 @@ export default function Home() {
               handleSwitchClick={handleSwitchClick}
               toggleCustomAlias={toggleCustomAlias}
               showCustomAlias={showCustomAlias}
+              handleCustomAliasChange={handleCustomAliasChange}
             />
           </section>
 
