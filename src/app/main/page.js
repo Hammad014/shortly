@@ -345,7 +345,7 @@ export default function Home() {
                 </p>
               </motion.div>
 
-              <div className="space-y-20">
+              <div className="space-y-20 hidden md:block">
                 <FeatureVisualization
                   title="Secure Bulk Processing"
                   description="Process multiple URLs simultaneously through secure file uploads with automatic validation"

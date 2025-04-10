@@ -25,21 +25,21 @@ export default function RootLayout({ children }) {
         
         {/* Background Rectangles */}
         <Image
-          className='fixed z-0 top-0 right-10'
+          className='fixed z-0 top-0 right-10 hidden md:block'
           src='/images/Rectangle 4 (1).png'
           height={250}
           width={350}
           alt='cube1'
         />
         <Image
-          className='fixed top-80 right-60 z-0'
+          className='fixed top-80 right-60 z-0 hidden md:block'
           src='/images/Rectangle 4.png'
           height={250}
           width={350}
           alt='cube2'
         />
         <Image
-          className='fixed z-0 top-28 left-10'
+          className='fixed z-0 top-28 left-10 hidden md:block'
           src='/images/Rectangle 5 (1).png'
           height={100}
           width={350}

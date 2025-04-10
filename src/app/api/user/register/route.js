@@ -72,7 +72,8 @@ export async function POST(req) {
     const verifyLink = `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/verify?token=${verificationToken}&email=${email}`;
     
     await transporter.sendMail({
-      from: `"Our Service" <${process.env.GMAIL_USER}>`,
+      from: `Our Service`,
+      // from: `"Our Service" <${process.env.GMAIL_USER}>`,
       to: email,
       subject: 'Verify Your Email',
       html: emailTemplate(firstName, verifyLink)

@@ -159,7 +159,7 @@ const handleSubmit = async (e) => {
     <>
     <GuestRoute>
       <Animate>
-        <div className="min-h-screen flex flex-col">
+        <div className="min-h-screen flex flex-col ">
           <Navbar showSignIn={false} showRegister={true} showHome={true} />
           
           <div className="flex-1 grid grid-cols-1 lg:grid-cols-2">

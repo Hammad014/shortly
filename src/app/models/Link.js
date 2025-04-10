@@ -32,6 +32,12 @@ const linkSchema = new mongoose.Schema({
   uniqueVisitors: [String],
   date: { type: Date, default: Date.now },
   sessionId: { type: String, required: true },
+
+  domain: {
+    type: String,
+    required: true,
+    default: process.env.NEXT_PUBLIC_BASE_URL
+  },
   
   expirationType: {
     type: String,

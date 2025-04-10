@@ -92,7 +92,7 @@ export default function ShortenForm({
             className="flex items-center gap-2 text-blue-400 hover:text-blue-300 text-sm"
           >
             {localShowAlias ? <FiUnlock className="text-lg" /> : <FiLock className="text-lg" />}
-            {localShowAlias ? 'Using Custom Alias' : 'Add Custom Alias'}
+            {localShowAlias ? 'Using Custom Back Half' : 'Add Custom Back half'}
           </button>
 
           
