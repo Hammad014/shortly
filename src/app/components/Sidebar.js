@@ -24,7 +24,7 @@ const Sidebar = ({ isMobileOpen }) => {
     { name: "Bulk Shortening", path: "/dashboard/bulk", icon: FiBox },
     // { name: "Password Protection", path: "/dashboard/protection", icon: FiLock },
     // { name: "API Settings", path: "/dashboard/api", icon: FiSettings },
-    { name: "Branding", path: "/dashboard/branding", icon: FiUsers },
+    // { name: "Branding", path: "/dashboard/branded-links", icon: FiUsers },
   ]
 
   return (

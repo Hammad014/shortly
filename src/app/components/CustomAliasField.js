@@ -16,7 +16,7 @@ export default function CustomAliasField({ value, onChange, baseUrl }) {
 
       try {
         setStatus({ state: 'loading', message: 'Checking availability...' });
-        const res = await fetch(`/api/links/validate?alias=${value}`);
+        const res = await fetch(`/api/links/validate?alias=${value}&domain=${baseUrl}`);
         const data = await res.json();
         
         if (data.valid) {

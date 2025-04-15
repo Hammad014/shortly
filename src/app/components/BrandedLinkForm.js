@@ -11,18 +11,31 @@ export default function BrandedLinkForm({ onCreate }) {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+
+  const getSessionId = async () => {
+    let sessionId = localStorage.getItem("sessionId");
+    if (!sessionId) {
+      sessionId = await createNewSession();
+    }
+    return sessionId;
+  };
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     
     try {
+      const sessionId = await getSessionId();
+      
       const response = await fetch('/api/links', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           originalUrl,
           customDomain: customDomain || process.env.NEXT_PUBLIC_BASE_URL,
-          customAlias: customAlias || undefined
+          customAlias: customAlias || undefined,
+          sessionId // Add sessionId to the request body
         })
       });
 

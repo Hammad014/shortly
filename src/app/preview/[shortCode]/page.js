@@ -1,3 +1,5 @@
+//app/preview/[shortCode]/page.js
+
 import { redirect } from 'next/navigation';
 import Preview from '../../components/Preview';
 

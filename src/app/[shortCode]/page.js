@@ -1,4 +1,4 @@
-// //[shortcode]/page.js
+//[shortcode]/page.js
 
 
 import { redirect } from 'next/navigation';
